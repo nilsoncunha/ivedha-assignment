@@ -1,0 +1,39 @@
+---
+- hosts: all
+  tasks:
+    - name: Verify and install services
+      become: yes
+      when: action == "verify_install"
+      yum:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - httpd
+        - rabbitmq-server
+        - postgresql-server
+
+    - name: Check disk space
+      become: yes
+      when: action == "check-disk"
+      shell: df -h | awk '$5 > 80 {print $6}'
+      register: disk_usage
+
+    - name: Send alert email
+      when: action == "check-disk" and disk_usage.stdout != ""
+      mail:
+        to: "admin@example.com"
+        subject: "Disk Usage Alert"
+        body: "Disk usage is above 80% on {{ inventory_hostname }}"
+
+    - name: Check service status
+      when: action == "check-status"
+      uri:
+        url: "http://rest_service:5000/healthcheck"
+        method: GET
+        return_content: yes
+      register: service_status
+
+    - name: Display service status
+      when: action == "check-status"
+      debug:
+        var: service_status.content
