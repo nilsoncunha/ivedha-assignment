@@ -9,8 +9,8 @@
         state: present
       with_items:
         - httpd
-        - rabbitmq-server
-        - postgresql-server
+        - rabbitmq
+        - postgresql
 
     - name: Check disk space
       become: yes
@@ -28,7 +28,7 @@
     - name: Check service status
       when: action == "check-status"
       uri:
-        url: "http://rest_service:5000/healthcheck"
+        url: "http://localhost:5000/healthcheck"
         method: GET
         return_content: yes
       register: service_status
