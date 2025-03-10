@@ -16,13 +16,16 @@ To reproduce this project, ensure the following are installed:
 
 ## Setting Up the Virtual Environment
 
-Create and activate the virtual environment:  
+Create and activate the virtual environment:
 ```bash
 # Create the virtual environment
 python -m venv .venv
 
 # Activate the virtual environment
 source .venv/bin/activate
+
+# Navigate to the path, for example: test1.
+cd test1
 
 # Install the required libraries
 pip install -r requirements.txt
